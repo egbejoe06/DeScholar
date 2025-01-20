@@ -1,7 +1,8 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <NavBar />
         <!-- Navbar with glass effect -->
-        <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm py-4 px-6 z-50">
+        <!-- <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm py-4 px-6 z-50">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center space-x-2">
                     <GraduationCap class="w-10 h-10 text-blue-600" />
@@ -22,12 +23,12 @@
                         </div>
                     </button>
                 </div>
-                <!-- Mobile menu button -->
+                Mobile menu button
                 <button class="md:hidden p-2 rounded-lg hover:bg-gray-100">
                     <Menu class="w-6 h-6 text-gray-600" />
                 </button>
             </div>
-        </nav>
+        </nav> -->
 
         <!-- Hero Section with animated gradient -->
         <header class="relative pt-32 pb-24 overflow-hidden">
@@ -274,6 +275,7 @@ import {
     Github
 } from 'lucide-vue-next'
 import { ref, onMounted } from "vue";
+import NavBar from '../components/NavBar.vue';
 import { ethers } from "ethers";
 import { useWallet } from '../composable/useWallet';
 

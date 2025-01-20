@@ -9,11 +9,16 @@ import {
   Question_CONTRACT_ADDRESS,
   Question_CONTRACT_ABI,
 } from "../constants/QuestionContract";
+import {
+  Proposal_CONTRACT_ADDRESS,
+  Proposal_CONTRACT_ABI,
+} from "../constants/ProposalContract";
 
 let provider = null;
 let signer = null;
 let ResearchContractInstance = null;
 let QuestionContractInstance = null;
+let ProposalContractInstance = null;
 
 // Vue reactive state
 const connected = ref(false);
@@ -41,9 +46,18 @@ export const useWallet = () => {
           Question_CONTRACT_ABI,
           signer
         );
+        ProposalContractInstance = new ethers.Contract(
+          Proposal_CONTRACT_ADDRESS,
+          Proposal_CONTRACT_ABI,
+          signer
+        );
 
         window.ethereum.on("accountsChanged", handleAccountsChanged);
-        return ResearchContractInstance, QuestionContractInstance;
+        return (
+          ResearchContractInstance,
+          QuestionContractInstance,
+          ProposalContractInstance
+        );
       } catch (error) {
         connected.value = false;
         console.error("Error connecting wallet:", error);
@@ -100,6 +114,7 @@ export const useWallet = () => {
 
   const getResearchContract = () => ResearchContractInstance;
   const getQuestionContract = () => QuestionContractInstance;
+  const getProposalContract = () => ProposalContractInstance;
 
   const signInWithEthereum = async () => {
     if (!connected.value) {
@@ -138,6 +153,7 @@ Issued At: ${currentTime}`;
     isAuthenticated,
     signInWithEthereum,
     getResearchContract,
+    getProposalContract,
     getQuestionContract,
   };
 };

@@ -5,6 +5,7 @@ import ResearchFeed from "../view/ResearchFeed.vue";
 import ResearchDetails from "../view/ResearchDetails.vue";
 import QuestionFeed from "../view/QuestionFeed.vue";
 import QuestionDetail from "../view/QuestionDetail.vue";
+import Proposal from "../view/Proposal.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/question/:id",
     name: "QuestionDetail",
     component: QuestionDetail,
+  },
+  {
+    path: "/Proposals",
+    name: "Proposal",
+    component: Proposal,
   },
 ];
 
