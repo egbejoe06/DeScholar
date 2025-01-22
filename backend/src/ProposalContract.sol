@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.28;
 
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/ReentrancyGuard.sol";
 import "./Interface.sol"; // Contains all interfaces
 
 contract DeScholarProposal is ReentrancyGuard, IDeScholarProposal {
