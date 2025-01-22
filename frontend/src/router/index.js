@@ -7,6 +7,8 @@ import QuestionFeed from "../view/QuestionFeed.vue";
 import QuestionDetail from "../view/QuestionDetail.vue";
 import Proposal from "../view/Proposal.vue";
 import ICO from "../view/ICO.vue";
+import GroupPage from "../view/GroupPage.vue";
+import ChatPage from "../view/ChatPage.vue";
 
 const routes = [
   {
@@ -48,6 +50,16 @@ const routes = [
     path: "/ICO",
     name: "ICO",
     component: ICO,
+  },
+  {
+    path: "/Communities",
+    name: "GroupPage",
+    component: GroupPage,
+  },
+  {
+    path: "/chat/:id",
+    name: "ChatPage",
+    component: ChatPage,
   },
 ];
 

@@ -105,8 +105,8 @@ const contract = ref(null)
 const menuItems = [
     { name: 'Research', route: { name: 'ResearchFeed' }, icon: Newspaper },
     { name: 'Question', route: { name: 'QuestionFeed' }, icon: MessageSquare },
-    { name: 'Courses', route: { name: 'ResearchFeed' }, icon: BookOpen },
-    { name: 'Community', route: { name: 'Proposal' }, icon: Users },
+    { name: 'Proposal', route: { name: 'Proposal' }, icon: Users },
+    { name: 'Community', route: { name: 'GroupPage' }, icon: BookOpen },
 ]
 
 const toggleMobileMenu = () => {

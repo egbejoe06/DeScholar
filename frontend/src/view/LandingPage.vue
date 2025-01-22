@@ -106,10 +106,10 @@
                         </div>
                         <h4
                             class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                            Course Management
+                            Group Discussions
                         </h4>
                         <p class="mt-4 text-gray-600 leading-relaxed">
-                            Create, sell, and manage courses using DST tokens in our decentralized learning marketplace.
+                            Engage in real-time discussions and Q&A sessions within your communities.
                         </p>
                     </div>
                 </div>
