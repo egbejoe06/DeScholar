@@ -2,32 +2,7 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <!-- Enhanced Navbar with glass effect -->
-        <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm py-4 px-6 z-50 border-b border-gray-100">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <GraduationCap class="w-10 h-10 text-indigo-600" />
-                    <h1
-                        class="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                        DeScholar
-                    </h1>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Research</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Courses</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition-colors">Community</a>
-                    <button @click="connectWallet"
-                        class="group bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-lg hover:shadow-xl">
-                        <div class="flex items-center space-x-2">
-                            <Wallet class="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                            <span>{{ userAccount ? 'Connected' : 'Connect Wallet' }}</span>
-                        </div>
-                    </button>
-                </div>
-                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100">
-                    <Menu class="w-6 h-6 text-gray-600" />
-                </button>
-            </div>
-        </nav>
+        <NavBar />
 
         <!-- Main Content with enhanced animations -->
         <div class="pt-32 pb-24 px-6">
@@ -122,6 +97,7 @@
                 </div>
             </div>
         </div>
+        <FooterSection />
     </div>
 </template>
 
@@ -130,6 +106,8 @@ import { ref, computed, onMounted } from 'vue'
 import { ethers } from 'ethers'
 import axios from 'axios'
 import { useWallet } from '../composable/useWallet'
+import NavBar from '../components/NavBar.vue'
+import FooterSection from '../components/FooterSection.vue'
 import {
     GraduationCap,
     Wallet,

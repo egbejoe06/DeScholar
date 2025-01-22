@@ -167,6 +167,7 @@
             </Dialog>
         </div>
     </div>
+    <FooterSection />
 </template>
 
 <script setup>
@@ -175,6 +176,7 @@ import { Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
 import { UserCircle } from 'lucide-vue-next'
 import { useWallet } from '../composable/useWallet'
 import { ethers } from 'ethers'
+import FooterSection from '../components/FooterSection.vue'
 import Navbar from "../components/NavBar.vue"
 
 const {

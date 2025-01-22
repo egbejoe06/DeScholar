@@ -154,6 +154,7 @@
             </Dialog>
         </div>
     </div>
+    <FooterSection />
 </template>
 
 <script setup>
@@ -164,6 +165,7 @@ import { useRoute } from 'vue-router'
 import { useWallet } from '../composable/useWallet'
 import Navbar from "../components/NavBar.vue"
 import axios from 'axios'
+import FooterSection from '../components/FooterSection.vue'
 
 const route = useRoute()
 const {

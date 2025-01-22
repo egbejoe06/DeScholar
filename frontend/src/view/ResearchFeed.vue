@@ -4,19 +4,28 @@
     </div>
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-24 px-6">
         <div class="max-w-7xl mx-auto">
-            <!-- Header -->
-            <!-- <div class="mb-8">
-                <h2 class="text-3xl font-bold text-gray-900">Research Feed</h2>
-                <p class="mt-2 text-gray-600">Discover the latest research papers from our community</p>
-            </div> -->
+            <!-- Header with Publish Button -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900">Research Feed</h2>
+                    <p class="mt-2 text-gray-600">Discover the latest research papers from our community</p>
+                </div>
+                <router-link to="/publish"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+                    <PlusCircle class="w-5 h-5" />
+                    Publish Research
+                </router-link>
+            </div>
 
             <!-- Loading State -->
             <div v-if="loading" class="flex justify-center items-center py-12">
                 <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
 
+            <!-- Rest of the template code remains the same -->
             <!-- Research Papers Grid -->
             <div v-else-if="researchPapers.length" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Existing research papers grid content -->
                 <div v-for="paper in researchPapers" :key="paper.tokenId"
                     class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100">
                     <router-link :to="{ name: 'ResearchDetail', params: { id: paper.tokenId } }">
@@ -83,6 +92,11 @@
             <div v-else class="text-center py-12">
                 <h3 class="text-lg font-medium text-gray-900">No Research Papers Found</h3>
                 <p class="mt-2 text-gray-500">Be the first to publish your research!</p>
+                <router-link to="/publish"
+                    class="mt-4 inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors gap-2">
+                    <PlusCircle class="w-5 h-5" />
+                    Publish Research
+                </router-link>
             </div>
 
             <!-- Review Modal -->
@@ -127,16 +141,18 @@
             </Dialog>
         </div>
     </div>
+    <FooterSection />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { Dialog, DialogOverlay, DialogTitle } from '@headlessui/vue'
-import { UserCircle, Star, FileDown } from 'lucide-vue-next'
+import { UserCircle, Star, FileDown, PlusCircle } from 'lucide-vue-next'
 import { useWallet } from '../composable/useWallet'
 import axios from 'axios'
 import { ethers } from 'ethers'
 import Navbar from "../components/NavBar.vue"
+import FooterSection from '../components/FooterSection.vue'
 
 const {
     connectWallet,
@@ -174,30 +190,20 @@ onMounted(async () => {
 // Fetch IPFS metadata
 const fetchNFTMetadata = async (tokenId) => {
     try {
-        // Get the token URI from the contract
         const tokenURI = await contract.value.tokenURI(tokenId)
-
-        // Construct the full IPFS URL using the provided Pinata gateway
         const ipfsGateway = 'https://pink-glamorous-hawk-591.mypinata.cloud/ipfs/'
         const cleanTokenURI = tokenURI.replace('ipfs://', '')
         const metadataUrl = `${ipfsGateway}${cleanTokenURI}`
-
-        // Fetch the metadata
         const response = await axios.get(metadataUrl)
-        console.log("metadata", response.data);
-
-        // Ensure that 'file' exists before replacing 'ipfs://'
         const imageUrl = response.data.file ? response.data.file.replace('ipfs://', ipfsGateway) : null;
 
         return {
             name: response.data.name || `NFT #${tokenId}`,
             description: response.data.description || 'No description available',
-            image: imageUrl || `https://via.placeholder.com/350x350?text=NFT+${tokenId}`, // Use placeholder if no image URL
+            image: imageUrl || `https://via.placeholder.com/350x350?text=NFT+${tokenId}`,
         }
     } catch (error) {
         console.error(`Failed to fetch metadata for NFT #${tokenId}:`, error)
-
-        // Return a default object with placeholder data
         return {
             name: `NFT #${tokenId}`,
             description: 'Metadata unavailable',
@@ -206,28 +212,19 @@ const fetchNFTMetadata = async (tokenId) => {
     }
 }
 
-
-
-// Get IPFS URL for file download
 function getIPFSUrl(uri) {
     const ipfsHash = uri.replace('ipfs://', '')
     return `https://pink-glamorous-hawk-591.mypinata.cloud/ipfs/${ipfsHash}`
 }
 
-// Fetch all research papers with IPFS metadata
 const fetchResearchPapers = async () => {
     try {
         const tokenIds = await contract.value.getAllAvailableResearch()
-        console.log('Fetched token IDs:', tokenIds)
-
         const papers = await Promise.all(
             tokenIds.map(async (tokenId) => {
                 const research = await contract.value.getResearch(tokenId)
                 const reviews = await contract.value.getResearchReviews(tokenId)
-
-                // Fetch metadata using fetchNFTMetadata
                 const metadata = await fetchNFTMetadata(tokenId)
-
                 return {
                     ...research,
                     metadata,
@@ -235,18 +232,12 @@ const fetchResearchPapers = async () => {
                 }
             })
         )
-
-        // Filter out invalid or deleted papers
         researchPapers.value = papers.filter(paper => paper && !paper.isDeleted && paper.metadata)
-        console.log(researchPapers.value);
-
     } catch (error) {
         console.error('Failed to fetch research papers:', error)
     }
 }
 
-
-// Check if current user has reviewed the paper
 async function isReviewer(tokenId) {
     try {
         return await contract.value.isReviewer(tokenId, userAccount.value)
@@ -256,7 +247,6 @@ async function isReviewer(tokenId) {
     }
 }
 
-// Modal and review functions
 function openReviewModal(paper) {
     selectedPaper.value = paper
     isReviewModalOpen.value = true
@@ -289,12 +279,10 @@ async function submitReview() {
     }
 }
 
-// Format timestamp to readable date
 function formatDate(timestamp) {
     return new Date(timestamp * 1000).toLocaleDateString()
 }
 
-// Truncate ethereum address
 function truncateAddress(address) {
     if (!address) return ''
     return `${address.slice(0, 6)}...${address.slice(-4)}`

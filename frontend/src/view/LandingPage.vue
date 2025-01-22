@@ -1,35 +1,6 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <NavBar />
-        <!-- Navbar with glass effect -->
-        <!-- <nav class="fixed w-full bg-white/80 backdrop-blur-md shadow-sm py-4 px-6 z-50">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <GraduationCap class="w-10 h-10 text-blue-600" />
-                    <h1
-                        class="text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        DeScholar
-                    </h1>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors">Research</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors">Courses</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-600 transition-colors">Community</a>
-                    <button
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        <div class="flex items-center space-x-2">
-                            <Wallet class="w-4 h-4" />
-                            <span @click="connect()">Connect Wallet</span>
-                        </div>
-                    </button>
-                </div>
-                Mobile menu button
-                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100">
-                    <Menu class="w-6 h-6 text-gray-600" />
-                </button>
-            </div>
-        </nav> -->
-
         <!-- Hero Section with animated gradient -->
         <header class="relative pt-32 pb-24 overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800"></div>
@@ -56,7 +27,8 @@
                         class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-bold hover:bg-white/10 transition-all duration-200">
                         <div class="flex items-center justify-center space-x-2">
                             <Info class="w-5 h-5" />
-                            <span>Learn More</span>
+                            <router-link :to="{ name: 'ICO' }">
+                                <span>ICO</span></router-link>
                         </div>
                     </button>
                 </div>

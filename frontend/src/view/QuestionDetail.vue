@@ -79,6 +79,7 @@
                 </div>
             </div>
         </div>
+        <FooterSection />
     </div>
 </template>
 
@@ -87,6 +88,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWallet } from '../composable/useWallet'
 import Navbar from "../components/NavBar.vue"
+import FooterSection from '../components/FooterSection.vue'
 
 const route = useRoute()
 const router = useRouter()

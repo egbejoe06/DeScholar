@@ -6,6 +6,7 @@ import ResearchDetails from "../view/ResearchDetails.vue";
 import QuestionFeed from "../view/QuestionFeed.vue";
 import QuestionDetail from "../view/QuestionDetail.vue";
 import Proposal from "../view/Proposal.vue";
+import ICO from "../view/ICO.vue";
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/Proposals",
     name: "Proposal",
     component: Proposal,
+  },
+  {
+    path: "/ICO",
+    name: "ICO",
+    component: ICO,
   },
 ];
 
