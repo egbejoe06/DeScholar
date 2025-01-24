@@ -49,7 +49,8 @@
                         <h3 class="text-xl font-semibold text-gray-900 mb-4">Predefined Groups</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div v-for="(group, index) in predefinedGroups" :key="index"
-                                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                                @click="navigateToChat(index)">
                                 <div class="flex justify-between items-start">
                                     <h4 class="text-lg font-semibold text-gray-900">{{ group.name }}</h4>
                                     <span class="px-2 py-1 rounded-full text-xs"
@@ -289,11 +290,12 @@ function truncateAddress(address) {
 }
 
 function navigateToChat(index, isPredefined) {
-    if (!isUserMember(index, isPredefined)) {
-        alert('Please join the group first')
-        return
-    }
-    const path = `/chat/${isPredefined ? index : index + 3}`
+    // if (!isUserMember(index, isPredefined)) {
+    //     alert('Please join the group first')
+    //     return
+    // }
+    // const path = `/chat/${isPredefined ? index : index + 3}`
+    const path = `/chat/${index}`
     router.push(path)
 }
 </script>

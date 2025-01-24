@@ -1,120 +1,121 @@
 <template>
-    <div class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-        <Navbar />
-        <div class="pt-24 px-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                    <!-- Group Info Header -->
-                    <div class="border-b border-gray-200 p-6 bg-gradient-to-r from-blue-50 to-white">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h2 class="text-3xl font-extrabold text-gray-900 leading-snug">
-                                    {{ groupInfo.name }}
-                                </h2>
-                                <p class="mt-2 text-lg text-gray-600">
-                                    {{ groupInfo.description }}
-                                </p>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-sm text-gray-500">
-                                    {{ groupInfo.memberCount }} members
-                                </div>
-                                <div class="text-xs text-gray-400 mt-1">
-                                    Created by:
-                                    <span class="text-blue-600 font-medium">
-                                        {{ truncateAddress(groupInfo.creator) }}
-                                    </span>
-                                </div>
-                                <div v-if="userProfile" class="mt-2 text-sm">
-                                    <span class="text-gray-500">Reputation: </span>
-                                    <span class="text-blue-600 font-medium">{{ userProfile.reputation }}</span>
-                                    <span class="text-gray-500 ml-2">Messages: </span>
-                                    <span class="text-blue-600 font-medium">{{ userProfile.messageCount }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <Navbar class="fixed top-0 left-0 right-0 z-50" />
 
-                    <!-- Messages Section -->
-                    <div ref="messagesContainer" class="h-96 overflow-y-auto p-6 bg-gray-50">
-                        <div v-if="isLoading" class="flex justify-center items-center h-full">
-                            <div
-                                class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent">
-                            </div>
-                        </div>
-                        <div v-else-if="error" class="text-center text-red-600 p-4">
-                            {{ error }}
-                            <button @click="fetchMessages" class="text-blue-600 underline ml-2 hover:text-blue-800">
-                                Retry
-                            </button>
-                        </div>
-                        <div v-else-if="messages.length === 0" class="text-center text-gray-500 p-4">
-                            No messages yet. Be the first to start the conversation!
-                        </div>
-                        <div v-else v-for="(message, index) in messages" :key="index" v-show="!message.deleted"
-                            class="mb-6 p-4 bg-white shadow-sm rounded-lg">
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center space-x-2">
-                                            <span class="font-medium text-blue-600">
-                                                {{ truncateAddress(message.sender) }}
-                                            </span>
-                                            <span class="text-xs text-gray-500">
-                                                {{ formatTimestamp(message.timestamp) }}
-                                            </span>
-                                        </div>
-                                        <div v-if="canDeleteMessage(message)" class="flex items-center">
-                                            <button @click="deleteMessage(index)"
-                                                class="text-red-500 hover:text-red-700 transition-colors">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p class="mt-2 text-gray-800 leading-relaxed">
-                                        {{ message.content }}
-                                    </p>
-                                    <div class="mt-2 flex items-center space-x-4">
-                                        <button @click="upvoteMessage(index)" :disabled="message.hasVoted" :class="[
-                                            'flex items-center space-x-1 text-sm transition-colors',
-                                            message.hasVoted ? 'text-blue-600' : 'text-gray-500 hover:text-blue-600'
-                                        ]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                                fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                            <span>{{ message.upvotes }}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Main Content -->
+        <div class="flex flex-col h-screen pt-16">
+            <!-- Group Header - Collapsible on mobile -->
+            <div class="bg-white border-b border-gray-200 px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-gray-900 truncate">
+                        {{ groupInfo.name }}
+                    </h2>
+                    <button @click="toggleGroupInfo" class="p-2 text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            :class="{ 'transform rotate-180': showGroupInfo }" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
 
-                    <!-- Message Input -->
-                    <div class="border-t border-gray-200 p-6 bg-gray-50">
-                        <form @submit.prevent="sendMessage" class="flex space-x-4">
-                            <input v-model="newMessage" type="text"
-                                class="flex-1 rounded-full border border-gray-300 px-5 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                                placeholder="Type your message..." :disabled="isSubmitting" required />
-                            <button type="submit"
-                                class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                                :disabled="isSubmitting || !newMessage.trim()">
-                                {{ isSubmitting ? 'Sending...' : 'Send' }}
-                            </button>
-                        </form>
+                <!-- Collapsible Group Info -->
+                <div v-show="showGroupInfo" class="mt-3 space-y-2 text-sm">
+                    <p class="text-gray-600">{{ groupInfo.description }}</p>
+                    <div class="flex justify-between text-gray-500">
+                        <span>{{ groupInfo.memberCount }} members</span>
+                        <span>Created by: {{ truncateAddress(groupInfo.creator) }}</span>
+                    </div>
+                    <div v-if="userProfile" class="flex justify-between text-gray-500">
+                        <span>Reputation: {{ userProfile.reputation }}</span>
+                        <span>Messages: {{ userProfile.messageCount }}</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Messages Section -->
+            <div ref="messagesContainer" class="flex-1 overflow-y-auto px-4 py-3 bg-gray-50">
+                <!-- Loading State -->
+                <div v-if="isLoading" class="flex justify-center items-center h-full">
+                    <div class="animate-spin rounded-full h-8 w-8 border-3 border-blue-500 border-t-transparent"></div>
+                </div>
+
+                <!-- Error State -->
+                <div v-else-if="error" class="text-center p-4">
+                    <p class="text-red-600">{{ error }}</p>
+                    <button @click="fetchMessages" class="mt-2 text-blue-600 underline">
+                        Retry
+                    </button>
+                </div>
+
+                <!-- Empty State -->
+                <div v-else-if="messages.length === 0" class="text-center p-4 text-gray-500">
+                    No messages yet. Start the conversation!
+                </div>
+
+                <!-- Messages -->
+                <div v-else class="space-y-4">
+                    <div v-for="(message, index) in messages" :key="index" v-show="!message.deleted"
+                        class="bg-white rounded-lg shadow-sm p-3">
+                        <!-- Message Header -->
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium text-blue-600 text-sm">
+                                    {{ truncateAddress(message.sender) }}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    {{ formatTimestamp(message.timestamp) }}
+                                </span>
+                            </div>
+                            <button v-if="canDeleteMessage(message)" @click="deleteMessage(index)"
+                                class="text-red-500 p-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Message Content -->
+                        <p class="mt-2 text-gray-800 text-sm break-words">
+                            {{ message.content }}
+                        </p>
+
+                        <!-- Message Actions -->
+                        <div class="mt-2">
+                            <button @click="upvoteMessage(index)" :disabled="message.hasVoted"
+                                class="flex items-center space-x-1 text-xs"
+                                :class="message.hasVoted ? 'text-blue-600' : 'text-gray-500'">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>{{ message.upvotes }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div class="bg-white border-t border-gray-200 p-3">
+                <form @submit.prevent="sendMessage" class="flex space-x-2">
+                    <input v-model="newMessage" type="text"
+                        class="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Type your message..." :disabled="isSubmitting" required />
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-full disabled:opacity-50"
+                        :disabled="isSubmitting || !newMessage.trim()">
+                        {{ isSubmitting ? '...' : 'Send' }}
+                    </button>
+                </form>
+            </div>
         </div>
-        <FooterSection class="pt-20" />
     </div>
 </template>
 
@@ -127,7 +128,10 @@ import FooterSection from '../components/FooterSection.vue'
 
 const route = useRoute()
 const { connectWallet, getResearchGroupContract, userAccount } = useWallet()
-
+const showGroupInfo = ref(false)
+const toggleGroupInfo = () => {
+    showGroupInfo.value = !showGroupInfo.value
+}
 // State
 const groupId = ref(parseInt(route.params.id))
 const groupInfo = ref({
